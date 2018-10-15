@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Person from './Person/Person'
+import Radium, { StyleRoot } from 'radium';
 
 class App extends Component {
   state = {
@@ -38,12 +39,15 @@ class App extends Component {
 
   render() {
     const style = {
-      backgroundColor: 'white',
+      backgroundColor: 'green',
       font: 'inherit',
-      color: '#777',
+      color: 'white',
       border: '1px solid #bbb',
       padding: '6px',
       cursor: 'pointer',
+      ':hover': {
+        backgroundColor: 'lightgreen',
+      }
     };
 
     let persons = null;
@@ -52,31 +56,47 @@ class App extends Component {
         <div>
           { this.state.persons.map((person, index) => {
             return <Person
-                click={() => this.deletePersonHandler(index)}
-                name={person.name}
-                age={person.age}
-                key={person.id}
-                change={(event) => this.nameChangeHandler(event, person.id)} />
+              click={() => this.deletePersonHandler(index)}
+              name={person.name}
+              age={person.age}
+              key={person.id}
+              change={(event) => this.nameChangeHandler(event, person.id)} />
           }) }
         </div>
       );
+
+      style.backgroundColor = 'red';
+      style[':hover'] = {
+        backgroundColor: 'salmon',
+      }
+    }
+
+    const classes = [];
+    if (this.state.persons.length <= 2) {
+      classes.push('red');
+    }
+    if (this.state.persons.length <= 1) {
+      classes.push('bold');
     }
 
     return (
-      <div className="App">
-        <h1>React sandbox</h1>
-        <button
-          style={style}
-          onClick={this.togglePersonsHandler}>
-            { this.state.showPersons ? 'Hide persons' : 'Show persons' }
-        </button>
-        { persons }
-        <p>{this.state.otherState}</p>
-      </div>
+      <StyleRoot>
+        <div className="App">
+          <h1>React sandbox</h1>
+          <p className={classes.join(' ')}>This is really working</p>
+          <button
+            style={style}
+            onClick={this.togglePersonsHandler}>
+              { this.state.showPersons ? 'Hide persons' : 'Show persons' }
+          </button>
+          { persons }
+          <p>{this.state.otherState}</p>
+        </div>
+      </StyleRoot>
     );
     // equivalent to:
     // return React.createElement('div', null, React.createElement('h1', {className: 'App'}, 'Hi, I\'m a React app!!!'))
   }
 }
 
-export default App;
+export default Radium(App);
