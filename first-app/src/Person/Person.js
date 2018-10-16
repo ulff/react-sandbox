@@ -3,6 +3,12 @@ import './Person.css';
 import Radium from 'radium';
 
 const person = (props) => {
+    const rnd = Math.random();
+    if (rnd > 0.9) {
+      throw new Error('Oups!');
+    }
+    console.log(rnd);
+
     const style = {
       '@media (min-width: 500px)': {
         width: '250px'
